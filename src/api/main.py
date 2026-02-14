@@ -1,4 +1,10 @@
 """
+═══════════════════════════════════════════════════════════════════
+  B2B Intelligence Platform — API Server
+  Интеллектуальная собственность АО «Арагант Групп»
+  Copyright (c) 2024-2026 АО «Арагант Групп». Все права защищены.
+═══════════════════════════════════════════════════════════════════
+
 FastAPI Backend for B2B Intelligence Platform.
 Serves the API for the Mission Control dashboard.
 """

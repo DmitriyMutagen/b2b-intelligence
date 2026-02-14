@@ -1,4 +1,11 @@
 """
+═══════════════════════════════════════════════════════════════════
+  B2B Intelligence Platform — Database Models
+  Интеллектуальная собственность АО «Арагант Групп»
+  Copyright (c) 2024-2026 АО «Арагант Групп». Все права защищены.
+═══════════════════════════════════════════════════════════════════
+"""
+"""
 Database models for B2B Intelligence Platform.
 Uses SQLAlchemy ORM with async support.
 """

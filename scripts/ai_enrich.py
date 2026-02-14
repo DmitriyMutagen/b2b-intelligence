@@ -35,7 +35,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 def ai_research_company(company_name: str, existing_data: dict) -> dict:
     """Use Gemini to research a company and extract structured data."""
     
-    model = genai.GenerativeModel("gemini-2.0-flash-exp")
+    model = genai.GenerativeModel("gemini-2.0-flash")
     
     prompt = f"""Ты — бизнес-аналитик. Найди максимум информации о российской компании в сфере спортивного питания / БАД / здорового питания.
 
@@ -222,8 +222,8 @@ def ai_enrich(limit: int = 50):
         else:
             stats["errors"] += 1
         
-        # Rate limiting (Gemini free tier: 15 RPM)
-        time.sleep(4)
+        # Rate limiting (Gemini free tier: ~2 RPM safe)
+        time.sleep(15)
         
         # Commit every 5
         if idx % 5 == 0:
