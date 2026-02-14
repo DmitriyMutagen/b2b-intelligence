@@ -1,0 +1,20 @@
+google-genai
+pydantic
+pydantic-settings
+python-dotenv
+pytest
+requests
+
+# MCP (Model Context Protocol) Integration
+# Install with: pip install 'mcp[cli]'
+# Or for just the core library: pip install mcp
+mcp[cli]>=1.0.0
+beautifulsoup4
+lxml
+openai
+apify-client
+notion-client
+sqlalchemy
+asyncpg
+psycopg2-binary
+redis

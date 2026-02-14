@@ -1,0 +1,31 @@
+﻿============================================================
+Bitrix24 Webhook Verification
+============================================================
+
+1. PROFILE
+   User: ─ьшЄЁшщ ├рурєч
+   Email: ?
+   ID: 1
+
+2. AVAILABLE SCOPES
+   Total scopes: 8
+   CRM scopes: ['crm']
+
+3. CRM LEADS
+   Total leads: 17929
+
+4. CRM CONTACTS
+   Total contacts: 7763
+
+5. CRM DEALS
+   Total deals: 5540
+
+6. CRM COMPANIES
+   Total companies: 2516
+
+7. TELEPHONY
+   Call records: 16069
+
+============================================================
+WEBHOOK VERIFICATION COMPLETE
+============================================================

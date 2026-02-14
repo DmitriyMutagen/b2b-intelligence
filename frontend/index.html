@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B Intelligence — Mission Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <div>
+                    <div class="logo-title">B2B Intel</div>
+                    <div class="logo-subtitle">Mission Control</div>
+                </div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="dashboard">
+                <span class="nav-icon">📊</span> Дашборд
+            </a>
+            <a href="#" class="nav-item" data-view="companies">
+                <span class="nav-icon">🏢</span> Компании
+            </a>
+            <a href="#" class="nav-item" data-view="documents">
+                <span class="nav-icon">📄</span> Документы
+            </a>
+            <a href="#" class="nav-item" data-view="crm">
+                <span class="nav-icon">📈</span> CRM Аналитика
+            </a>
+            <a href="#" class="nav-item" data-view="recon">
+                <span class="nav-icon">🔍</span> Разведка
+            </a>
+            <a href="#" class="nav-item" data-view="profile">
+                <span class="nav-icon">🏭</span> Наш профиль
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="status-badge online">● API Online</div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="top-bar">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="globalSearch" placeholder="Поиск компании по названию...">
+            </div>
+            <div class="top-bar-actions">
+                <button class="btn btn-ghost" id="refreshBtn" title="Обновить данные">🔄</button>
+                <div class="user-avatar">АВ</div>
+            </div>
+        </header>
+
+        <!-- Dashboard View -->
+        <section class="view active" id="view-dashboard">
+            <div class="view-header">
+                <div>
+                    <h1>Центр Управления</h1>
+                    <p class="view-subtitle">Обзор базы данных B2B Intelligence Platform</p>
+                </div>
+                <div class="view-actions">
+                    <button class="btn btn-primary" id="btnReconCrawl">🔍 Парсинг сайтов</button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card" style="--accent: #6366f1">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statTotal">—</div>
+                        <div class="stat-label">Всего компаний</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #10b981">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statEnriched">—</div>
+                        <div class="stat-label">Обогащено</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #f59e0b">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statHot">—</div>
+                        <div class="stat-label">Горячие лиды</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #ec4899">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statWebsite">—</div>
+                        <div class="stat-label">С сайтом</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Companies -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Топ компании по выручке</h2>
+                    <button class="btn btn-sm" onclick="showView('companies')">Все →</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Компания</th>
+                                <th>Форма</th>
+                                <th>Выручка</th>
+                                <th>Продажи</th>
+                                <th>WB</th>
+                                <th>Ozon</th>
+                                <th>Статус</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="topCompaniesBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Companies View -->
+        <section class="view" id="view-companies">
+            <div class="view-header">
+                <h1>База Компаний</h1>
+                <div class="view-actions">
+                    <select id="filterStatus" class="select-input">
+                        <option value="">Все статусы</option>
+                        <option value="new">Новые</option>
+                        <option value="in_progress">В работе</option>
+                        <option value="enriched">Обогащены</option>
+                    </select>
+                    <input type="text" id="searchCompany" class="text-input" placeholder="Поиск...">
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Компания</th>
+                                <th>Форма</th>
+                                <th>Выручка ₽</th>
+                                <th>Продажи шт</th>
+                                <th>Ср. Цена</th>
+                                <th>WB</th>
+                                <th>Ozon</th>
+                                <th>Score</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companiesBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+            <!-- Dossier Modal -->
+            <div class="modal-overlay" id="dossierModal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h2 id="dossierTitle">Досье компании</h2>
+                        <button class="btn btn-ghost" onclick="closeDossier()">✕</button>
+                    </div>
+                    <div class="modal-body" id="dossierBody">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents View -->
+        <section class="view" id="view-documents">
+            <div class="view-header">
+                <h1>База Знаний</h1>
+                <p class="view-subtitle">Загрузите КП, спецификации, договоры — ИИ будет использовать их как контекст
+                </p>
+            </div>
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon">📁</div>
+                <p>Перетащите файлы сюда или <label for="fileInput" class="upload-link">выберите файлы</label></p>
+                <p class="upload-hint">PDF, DOCX, TXT — до 50 MB</p>
+                <input type="file" id="fileInput" multiple accept=".pdf,.docx,.txt,.doc" hidden>
+                <select id="docType" class="select-input" style="margin-top:12px">
+                    <option value="kp_template">Коммерческое предложение (КП)</option>
+                    <option value="specification">Спецификация</option>
+                    <option value="contract">Договор</option>
+                    <option value="price_list">Прайс-лист</option>
+                    <option value="presentation">Презентация</option>
+                    <option value="other">Другое</option>
+                </select>
+            </div>
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <h2>Загруженные документы</h2>
+                </div>
+                <div id="documentsList" class="documents-list">
+                    <p class="empty-state">Документы ещё не загружены</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recon View -->
+        <section class="view" id="view-recon">
+            <div class="view-header">
+                <div>
+                    <h1>🔍 Разведка — Парсинг сайтов</h1>
+                    <p class="view-subtitle">Автоматический сбор контактов с сайтов компаний</p>
+                </div>
+                <div class="view-actions">
+                    <button class="btn btn-primary" id="btnStartRecon">🚀 Запустить парсинг</button>
+                    <button class="btn" id="btnRefreshRecon">🔄 Обновить</button>
+                </div>
+            </div>
+
+            <!-- Recon Stats -->
+            <div class="stats-grid" id="reconStatsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-value" id="reconTotalSites">—</div>
+                    <div class="stat-label">Компаний с сайтом</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="reconCrawled">—</div>
+                    <div class="stat-label">Уже спарсено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📧</div>
+                    <div class="stat-value" id="reconContacts">—</div>
+                    <div class="stat-label">Контактов найдено</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-value" id="reconRemaining">—</div>
+                    <div class="stat-label">Осталось</div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <h2>Прогресс парсинга</h2>
+                    <span class="badge badge-new" id="reconProgressPct">0%</span>
+                </div>
+                <div style="padding:16px">
+                    <div style="background:var(--bg-secondary);border-radius:8px;height:24px;overflow:hidden">
+                        <div id="reconProgressBar"
+                            style="background:linear-gradient(90deg,#10b981,#34d399);height:100%;border-radius:8px;transition:width 0.5s ease;width:0%">
+                        </div>
+                    </div>
+                    <p style="margin-top:8px;color:var(--text-secondary);font-size:13px" id="reconProgressText">Ожидает
+                        запуска</p>
+                </div>
+            </div>
+
+            <!-- Found Contacts Table -->
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <h2>📋 Найденные контакты</h2>
+                    <span class="badge badge-new" id="reconContactsCount">0</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Компания</th>
+                                <th>Тип</th>
+                                <th>Значение</th>
+                                <th>Источник</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reconContactsBody">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">Запустите парсинг для поиска контактов
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRM View -->
+        <section class="view" id="view-crm">
+            <div class="view-header">
+                <h1>CRM Аналитика</h1>
+                <div class="view-actions">
+                    <button class="btn btn-primary" id="btnSyncCrm">🔄 Синхронизация Bitrix24</button>
+                    <!-- <button class="btn" id="btnAnalyzeCrm">🧠 Запустить ИИ-анализ</button> -->
+                </div>
+            </div>
+
+            <!-- CRM Stats -->
+            <div class="stats-grid" id="crmStatsGrid">
+                <div class="stat-card" style="--accent: #3b82f6">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmLeadsTotal">—</div>
+                        <div class="stat-label">Всего лидов</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #8b5cf6">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmDealsTotal">—</div>
+                        <div class="stat-label">Сделок в работе</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #ef4444">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmLostLeads">—</div>
+                        <div class="stat-label">Потерянных лидов</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #10b981">
+                    <div class="stat-icon">📞</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmCallsTotal">—</div>
+                        <div class="stat-label">Звонков</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px">
+                <!-- Funnel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Воронка продаж</h2>
+                    </div>
+                    <div id="crmFunnelChart" style="padding:16px;min-height:200px">
+                        <div class="funnel-container" id="funnelContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Call Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Эффективность звонков</h2>
+                    </div>
+                    <div style="padding:16px">
+                        <div class="dossier-grid">
+                            <div class="dossier-field">
+                                <div class="label">Всего звонков</div>
+                                <div class="value" id="callTotal">—</div>
+                            </div>
+                            <div class="dossier-field">
+                                <div class="label">Средняя длительность</div>
+                                <div class="value" id="callAvgDuration">—</div>
+                            </div>
+                            <div class="dossier-field">
+                                <div class="label">Часов на линии</div>
+                                <div class="value" id="callTotalHours">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lost Leads Table -->
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <h2>🔥 Потерянные лиды (вернуть в работу)</h2>
+                    <span class="badge badge-new" id="lostLeadsCount">0</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Компания</th>
+                                <th>Телефон</th>
+                                <th>Статус</th>
+                                <th>Простой (дней)</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lostLeadsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- CRM View -->
+        <section class="view" id="view-crm">
+            <div class="view-header">
+                <h1>CRM Аналитика</h1>
+                <div class="view-actions">
+                    <button class="btn btn-primary" id="btnSyncCrm">🔄 Синхронизация Bitrix24</button>
+                    <!-- <button class="btn" id="btnAnalyzeCrm">🧠 Запустить ИИ-анализ</button> -->
+                </div>
+            </div>
+
+            <!-- CRM Stats -->
+            <div class="stats-grid" id="crmStatsGrid">
+                <div class="stat-card" style="--accent: #3b82f6">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmLeadsTotal">—</div>
+                        <div class="stat-label">Всего лидов</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #8b5cf6">
+                    <div class="stat-icon">🤝</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmDealsTotal">—</div>
+                        <div class="stat-label">Сделок в работе</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #ef4444">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmLostLeads">—</div>
+                        <div class="stat-label">Потерянных лидов</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="--accent: #10b981">
+                    <div class="stat-icon">📞</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="crmCallsTotal">—</div>
+                        <div class="stat-label">Звонков</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px">
+                <!-- Funnel -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Воронка продаж</h2>
+                    </div>
+                    <div id="crmFunnelChart" style="padding:16px;min-height:200px">
+                        <div class="funnel-container" id="funnelContainer"></div>
+                    </div>
+                </div>
+
+                <!-- Call Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Эффективность звонков</h2>
+                    </div>
+                    <div style="padding:16px">
+                        <div class="dossier-grid">
+                            <div class="dossier-field">
+                                <div class="label">Всего звонков</div>
+                                <div class="value" id="callTotal">—</div>
+                            </div>
+                            <div class="dossier-field">
+                                <div class="label">Средняя длительность</div>
+                                <div class="value" id="callAvgDuration">—</div>
+                            </div>
+                            <div class="dossier-field">
+                                <div class="label">Часов на линии</div>
+                                <div class="value" id="callTotalHours">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lost Leads Table -->
+            <div class="card" style="margin-top:24px">
+                <div class="card-header">
+                    <h2>🔥 Потерянные лиды (вернуть в работу)</h2>
+                    <span class="badge badge-new" id="lostLeadsCount">0</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Компания</th>
+                                <th>Телефон</th>
+                                <th>Статус</th>
+                                <th>Простой (дней)</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lostLeadsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile View -->
+        <section class="view" id="view-profile">
+            <div class="view-header">
+                <h1>Наш Профиль</h1>
+                <p class="view-subtitle">Контекст компании для ИИ-генерации</p>
+            </div>
+            <div class="card">
+                <pre id="profileJson" class="profile-json"></pre>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

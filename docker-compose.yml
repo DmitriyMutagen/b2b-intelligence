@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  agent:
+    build: .
+    container_name: antigravity-agent
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - AGENT_NAME=ProductionAgent
+      - DEBUG_MODE=true
+    volumes:
+      - ./agent_memory.json:/app/agent_memory.json
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: b2b-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=b2b_intelligence
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
